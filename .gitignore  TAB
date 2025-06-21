@@ -1,0 +1,67 @@
+# ==============================
+# macOS SYSTEM FILES
+# ==============================
+.DS_Store
+.AppleDouble
+.LSOverride
+.Spotlight-V100
+.Trashes
+._*
+
+# ==============================
+# PYTHON ARTIFACTS
+# ==============================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.py.class
+*.pickle
+*.pkl
+venv/
+.env
+.pytest_cache/
+
+# ==============================
+# JUPYTER NOTEBOOKS
+# ==============================
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ==============================
+# DATA AND SECURITY
+# ==============================
+data/*
+!data/.gitkeep
+*.csv
+*.xlsx
+*.db
+*.sqlite
+secrets.py
+kaggle.json
+.env
+*.key
+
+# ==============================
+# IDE AND EDITOR FILES
+# ==============================
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ==============================
+# OUTPUT FILES
+# ==============================
+results/*
+!results/.gitkeep
+models/*
+!models/.gitkeep
+*.pdf
+*.png
+*.jpg
+
+
+
+
