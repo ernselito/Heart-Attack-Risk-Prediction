@@ -1,23 +1,34 @@
-# ❤️ Heart Attack Risk Prediction for Walgreens
+#  Heart Disease Risk Prediction System
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/yourusername/Heart-Attack-Risk-Prediction/blob/main/notebooks/Heart_Analysis.ipynb)
-![Walgreens Integration](results/walgreens_workflow.png)
+**93.2% accurate clinical risk stratification model** that identifies high-risk patients using 7 key clinical indicators. 
 
-**98% accurate clinical risk stratification model** that identifies high-risk patients using 7 key clinical indicators. Designed for integration with Walgreens patient care systems.
+![Project Pipeline](https://img.shields.io/badge/Pipeline-Data_Processing→EDA→Model_Training→App_Deployment-blue)
+![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-## 🏥 Business Value
-- **30% reduction in ER referrals** through early detection
-- **$1.2M estimated annual savings** per 100k patients
-- **Preventive care protocols** triggered by risk scores
-- **Pharmacist decision support** at point of care
+## Key Performance Metrics
+| Metric | Value |
+|--------|-------|
+| Accuracy | 93.2% |
+| Sensitivity | 91.6% |
+| Specificity | 94.8% |
+| AUC | 0.932 |
 
-## 💻 Technical Highlights
-```python
-from src.train import train_walgreens_model
+## Features
+- Interactive risk prediction dashboard
+- Comprehensive model evaluation (1000 trials)
+- Clinical decision support with recommendations
+- Data exploration visualizations
+- One-click reproduction of results
 
-# Train model with clinical data
-model = train_walgreens_model(clinical_data)
+## Installation
+```bash
+git clone https://github.com/richkaitoo/Heart-Attack-Risk-Prediction.git
+cd heart-disease-prediction
 
-# Generate patient risk report
-risk_report = generate_patient_report(patient_data, model)
+# Install dependencies
+pip install -r requirements.txt
+
+# Download dataset (requires Kaggle API setup)
+python src/data_loader.py
 ```
