@@ -5,19 +5,44 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import roc_curve, auc
+import os
 
-# Load model and data
+# Load model and data with robust path handling
 @st.cache_resource
 def load_model():
-    return joblib.load('model/knn_model.pkl')
+    # Try different paths for local vs cloud deployment
+    model_paths = [
+        'model/knn_model.pkl',              # Local development path
+        '../model/knn_model.pkl',           # Streamlit Cloud path
+        'src/model/knn_model.pkl'           # Alternative structure
+    ]
+    for path in model_paths:
+        if os.path.exists(path):
+            return joblib.load(path)
+    raise FileNotFoundError("Model file not found in any expected locations")
 
 @st.cache_data
 def load_data():
-    return pd.read_csv('data/heart.csv')
+    # Try different paths for local vs cloud deployment
+    data_paths = [
+        'data/heart.csv',                   # Local development path
+        '../data/heart.csv',                # Streamlit Cloud path
+        'src/data/heart.csv'                # Alternative structure
+    ]
+    for path in data_paths:
+        if os.path.exists(path):
+            return pd.read_csv(path)
+    raise FileNotFoundError("Dataset not found in any expected locations")
 
 # Initialize
-model = load_model()
-df = load_data()
+try:
+    model = load_model()
+    df = load_data()
+    st.session_state.model_loaded = True
+except Exception as e:
+    st.error(f"Error loading resources: {str(e)}")
+    st.session_state.model_loaded = False
+    st.stop()
 
 # App title and description
 st.title('❤️ Heart Disease Risk Predictor')
@@ -46,29 +71,32 @@ thalach = st.sidebar.slider('Max Heart Rate', 70, 200, 150)
 exang = st.sidebar.radio('Exercise Angina', [0, 1], format_func=lambda x: 'No' if x == 0 else 'Yes')
 
 # Create feature vector with correct data types
-# Thal needs to be string, Cp needs to be integer
-input_data = [[ca, cp, sex, oldpeak, str(thal), thalach, exang]]  # Convert only Thal to string
+input_data = [[ca, cp, sex, oldpeak, str(thal), thalach, exang]]
 columns = ['ca', 'Cp', 'Sex', 'oldpeak', 'Thal', 'thalach', 'Exang']
 
 # Make prediction
 if st.sidebar.button('Predict Risk'):
     input_df = pd.DataFrame(input_data, columns=columns)
-    prediction = model.predict(input_df)[0]
-    proba = model.predict_proba(input_df)[0]
-    risk_prob = proba[1]  # Probability of heart disease
+    try:
+        prediction = model.predict(input_df)[0]
+        proba = model.predict_proba(input_df)[0]
+        risk_prob = proba[1]  # Probability of heart disease
+        
+        # Display results
+        st.subheader('Prediction Result')
+        if prediction == 1:
+            st.error(f'High Risk of Heart Disease ({risk_prob:.1%} probability)')
+            st.markdown("**Recommendation:** Immediate cardiology referral")
+        else:
+            st.success(f'Low Risk of Heart Disease ({1-risk_prob:.1%} probability)')
+            st.markdown("**Recommendation:** Routine follow-up")
+        
+        # Show probability gauge
+        st.progress(float(risk_prob))
+        st.caption(f'Risk probability: {risk_prob:.1%}')
     
-    # Display results
-    st.subheader('Prediction Result')
-    if prediction == 1:
-        st.error(f'High Risk of Heart Disease ({risk_prob:.1%} probability)')
-        st.markdown("**Recommendation:** Immediate cardiology referral")
-    else:
-        st.success(f'Low Risk of Heart Disease ({1-risk_prob:.1%} probability)')
-        st.markdown("**Recommendation:** Routine follow-up")
-    
-    # Show probability gauge
-    st.progress(risk_prob)
-    st.caption(f'Risk probability: {risk_prob:.1%}')
+    except Exception as e:
+        st.error(f"Prediction failed: {str(e)}")
 
 # EDA Visualizations
 st.header('Data Exploration')
@@ -87,31 +115,44 @@ with tab2:
     feature = st.selectbox('Select feature', 
                          ['age', 'trestbps', 'chol', 'thalach', 'oldpeak'])
     fig, ax = plt.subplots()
-    sns.boxplot(x='target', y=feature, data=df, ax=ax)
+    sns.boxplot(x='Target', y=feature, data=df, ax=ax)
     st.pyplot(fig)
 
 with tab3:
     st.subheader('Model Performance')
     try:
-        # Load pre-saved test data
-        pred_data = pd.read_csv('outputs/results/prediction_data.csv')
-        fpr, tpr, _ = roc_curve(pred_data['y_test'], pred_data['y_prob'])
-        roc_auc = auc(fpr, tpr)
+        # Try multiple paths for prediction data
+        pred_paths = [
+            'model/prediction_data.csv',
+            '../model/prediction_data.csv',
+            'src/model/prediction_data.csv'
+        ]
+        pred_data = None
+        for path in pred_paths:
+            if os.path.exists(path):
+                pred_data = pd.read_csv(path)
+                break
         
-        fig, ax = plt.subplots()
-        ax.plot(fpr, tpr, color='darkorange', lw=2, 
-                label=f'ROC curve (AUC = {roc_auc:.2f})')
-        ax.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
-        ax.set_xlim([0.0, 1.0])
-        ax.set_ylim([0.0, 1.05])
-        ax.set_xlabel('False Positive Rate')
-        ax.set_ylabel('True Positive Rate')
-        ax.set_title('Receiver Operating Characteristic')
-        ax.legend(loc="lower right")
-        st.pyplot(fig)
-        
-    except FileNotFoundError:
-        st.warning("Performance data not available. Run main.py first")
+        if pred_data is None:
+            st.warning("Performance data not found")
+        else:
+            fpr, tpr, _ = roc_curve(pred_data['y_test'], pred_data['y_prob'])
+            roc_auc = auc(fpr, tpr)
+            
+            fig, ax = plt.subplots()
+            ax.plot(fpr, tpr, color='darkorange', lw=2, 
+                    label=f'ROC curve (AUC = {roc_auc:.2f})')
+            ax.plot([0, 1], [0, 1], color='navy', lw=2, linestyle='--')
+            ax.set_xlim([0.0, 1.0])
+            ax.set_ylim([0.0, 1.05])
+            ax.set_xlabel('False Positive Rate')
+            ax.set_ylabel('True Positive Rate')
+            ax.set_title('Receiver Operating Characteristic')
+            ax.legend(loc="lower right")
+            st.pyplot(fig)
+            
+    except Exception as e:
+        st.warning(f"Could not display performance data: {str(e)}")
 
 # Dataset preview
 st.header('Dataset Preview')
