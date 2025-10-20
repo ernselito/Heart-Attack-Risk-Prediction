@@ -83,5 +83,3 @@ After hyperparameter tuning, the optimized KNN model achieved:
 ##  Conclusion
 This project successfully demonstrates that machine learning models, particularly K-Nearest Neighbors with proper parameter tuning, can achieve exceptional performance in heart disease prediction. The results highlight the potential of ML in medical diagnostics and provide a robust framework for similar healthcare prediction tasks.
 
----
-*Note: This project is for educational and research purposes. Always consult healthcare professionals for medical diagnoses.*
