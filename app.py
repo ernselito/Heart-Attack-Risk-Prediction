@@ -72,7 +72,7 @@ exang = st.sidebar.radio('Exercise Angina', [0, 1], format_func=lambda x: 'No' i
 
 # Create feature vector with correct data types
 input_data = [[ca, cp, sex, oldpeak, str(thal), thalach, exang]]
-columns = ['ca', 'Cp', 'Sex', 'oldpeak', 'Thal', 'thalach', 'Exang']
+columns = ['ca', 'Cp', 'Sex', 'oldpeak', 'thal', 'thalach', 'Exang']
 
 # Make prediction
 if st.sidebar.button('Predict Risk'):
@@ -115,7 +115,7 @@ with tab2:
     feature = st.selectbox('Select feature', 
                          ['age', 'trestbps', 'chol', 'thalach', 'oldpeak'])
     fig, ax = plt.subplots()
-    sns.boxplot(x='Target', y=feature, data=df, ax=ax)
+    sns.boxplot(x=feature, y='target' if 'target' in df.columns else 'Target', data=df, ax=ax)
     st.pyplot(fig)
 
 with tab3:

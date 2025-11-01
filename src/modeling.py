@@ -18,11 +18,11 @@ def evaluate_models(df, trials=1000, test_size=0.5):
     preprocessor = ColumnTransformer(
         transformers=[
             ('cat', OneHotEncoder(drop='first'), 
-             ['Cp', 'Sex', 'Thal', 'Exang']),
+             ['Cp', 'Sex', 'thal', 'Exang']),
             ('num', StandardScaler(), ['ca', 'oldpeak', 'thalach'])
         ])
     
-    X = df[['ca', 'Cp', 'Sex', 'oldpeak', 'Thal', 'thalach', 'Exang']]
+    X = df[['ca', 'Cp', 'Sex', 'oldpeak', 'thal', 'thalach', 'Exang']]
     y = df['Target'].astype(int)
     
     for _ in range(trials):
@@ -61,11 +61,11 @@ def final_knn_evaluation(df, test_size=0.5):
     preprocessor = ColumnTransformer(
         transformers=[
             ('cat', OneHotEncoder(drop='first'), 
-             ['Cp', 'Sex', 'Thal', 'Exang']),
+             ['Cp', 'Sex', 'thal', 'Exang']),
             ('num', StandardScaler(), ['ca', 'oldpeak', 'thalach'])
         ])
     
-    X = df[['ca', 'Cp', 'Sex', 'oldpeak', 'Thal', 'thalach', 'Exang']]
+    X = df[['ca', 'Cp', 'Sex', 'oldpeak', 'thal', 'thalach', 'Exang']]
     y = df['Target'].astype(int)
     
     X_train, X_test, y_train, y_test = train_test_split(

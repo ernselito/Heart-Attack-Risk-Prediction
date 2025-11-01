@@ -1,10 +1,6 @@
 pandas
 numpy
-scikit-learn
 matplotlib
 seaborn
-plotly
-jupyter
-flask
+scikit-learn
 joblib
-kaggle

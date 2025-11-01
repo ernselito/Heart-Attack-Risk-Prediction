@@ -11,7 +11,7 @@ sample_data = {
     'Cp': [3],        # Integer
     'Sex': [1],        # Integer
     'oldpeak': [2.3],  # Float
-    'Thal': ['2'],     # String!
+    'thal': ['2'],     # String!
     'thalach': [150],  # Integer
     'Exang': [1]       # Integer
 }

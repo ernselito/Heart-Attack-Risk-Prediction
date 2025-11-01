@@ -1,5 +1,5 @@
 # main.py
-from src.data_loader import load_and_preprocess_data  # Removed download_dataset
+from data.data_loader import load_and_preprocess_data  # Removed download_dataset
 from src.eda import plot_correlation, plot_categorical_distributions
 from src.modeling import evaluate_models, final_knn_evaluation
 from src.visualization import plot_model_comparison, plot_roc_curve

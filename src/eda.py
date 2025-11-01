@@ -19,7 +19,7 @@ def plot_correlation(df, save_path=None):
 
 def plot_categorical_distributions(df, save_path=None):
     """Boxplots for categorical features vs target"""
-    cat_cols = ['Sex', 'Cp', 'Fbs', 'Restecg', 'Exang', 'Slope', 'Thal']
+    cat_cols = ['Sex', 'Cp', 'Fbs', 'Restecg', 'Exang', 'Slope', 'thal']
     fig, axes = plt.subplots(3, 3, figsize=(18, 15))
     axes = axes.flatten()
     
